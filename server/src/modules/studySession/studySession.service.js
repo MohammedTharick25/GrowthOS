@@ -1,0 +1,2 @@
+import{studySessionRepository}from'./studySession.repository.js';import{dateKeyAt}from'../../utils/dateHelpers.js';import{AppError}from'../../utils/errorHandler.js';
+export const studySessionService={add:(user,input)=>studySessionRepository.create({...input,userId:user.id,dateKey:dateKeyAt(new Date(),user.timezone)}),range:(user,from,to)=>studySessionRepository.range(user.id,from,to),async remove(user,id){const row=await studySessionRepository.remove(user.id,id);if(!row)throw new AppError('Study session not found.',404);return row;}};

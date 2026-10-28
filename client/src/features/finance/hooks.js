@@ -1,0 +1,4 @@
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { queryKeys } from '../../lib/queryKeys.js';
+import { financeApi } from './api.js';
+export function useFinance(from,to){const queryClient=useQueryClient();const entries=useQuery({queryKey:queryKeys.finance(from,to),queryFn:()=>financeApi.range(from,to)});const summary=useQuery({queryKey:queryKeys.financeSummary(from,to),queryFn:()=>financeApi.summary(from,to)});const add=useMutation({mutationFn:financeApi.add,onSuccess:()=>{queryClient.invalidateQueries({queryKey:['finance']});queryClient.invalidateQueries({queryKey:['analytics']});}});const remove=useMutation({mutationFn:financeApi.remove,onSuccess:()=>{queryClient.invalidateQueries({queryKey:['finance']});queryClient.invalidateQueries({queryKey:['analytics']});}});return{entries,summary,add,remove};}

@@ -1,0 +1,2 @@
+import{Router}from'express';import{protect}from'../../utils/authMiddleware.js';import{validate}from'../../utils/validate.js';import{toggleSchema,setCheckinSchema,rangeSchema}from'./checkin.validation.js';import{getToday,toggle,setCompleted,getRange}from'./checkin.controller.js';
+const router=Router();router.use(protect);router.get('/today',getToday);router.post('/toggle',validate(toggleSchema),toggle);router.put('/state',validate(setCheckinSchema),setCompleted);router.get('/range',validate(rangeSchema),getRange);export default router;

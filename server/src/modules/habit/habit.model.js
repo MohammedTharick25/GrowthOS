@@ -1,0 +1,4 @@
+import mongoose from 'mongoose';
+const schema = new mongoose.Schema({ userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, index: true }, identityKey: { type: String, enum: ['career','health','confidence','finance','family','discipline'], required: true }, title: { type: String, required: true, trim: true, maxlength: 120 }, description: { type: String, default: '', maxlength: 400 }, schedule: { type: String, enum: ['daily','weekdays'], default: 'daily' }, targetMinutes: { type: Number, min: 1, max: 1440 }, isDefault: { type: Boolean, default: false }, order: { type: Number, default: 0 }, isArchived: { type: Boolean, default: false }, isDeleted: { type: Boolean, default: false }, deletedAt: Date }, { timestamps: true });
+schema.index({ userId: 1, isDeleted: 1, isArchived: 1, order: 1 });
+export const Habit = mongoose.model('Habit', schema);

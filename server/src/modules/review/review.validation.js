@@ -1,0 +1,7 @@
+import {z} from 'zod';
+const answer=z.string().max(1000).optional();
+export const saveDailySchema=z.object({body:z.object({answers:z.object({career:answer,health:answer,selfRespect:answer,relationships:answer,discipline:answer,tomorrow:answer}).partial().optional(),didWell:answer,learned:answer,respectedSelf:answer,challenge:answer,improveTomorrow:answer,valuesMoment:answer,mood:z.number().int().min(1).max(5).optional(),energy:z.number().int().min(1).max(5).optional()}).strict()});
+export const dateParamSchema=z.object({params:z.object({dateKey:z.string().regex(/^\d{4}-\d{2}-\d{2}$/)})});
+export const historySchema=z.object({query:z.object({from:z.string().regex(/^\d{4}-\d{2}-\d{2}$/),to:z.string().regex(/^\d{4}-\d{2}-\d{2}$/)})});
+export const saveWeeklySchema=z.object({body:z.object({weekly:z.object({worked:z.string().max(1000).optional().default(''),didntWork:z.string().max(1000).optional().default(''),lesson:z.string().max(1000).optional().default(''),adjustment:z.string().max(1000).optional().default('')}).strict()}).strict()});
+export const saveMonthlySchema=z.object({body:z.object({monthly:z.object({cycleNumber:z.number().int().min(1).optional(),learned:z.string().max(1000).optional().default(''),easier:z.string().max(1000).optional().default(''),struggling:z.string().max(1000).optional().default(''),continue:z.string().max(1000).optional().default(''),nextFocus:z.string().max(1000).optional().default('')}).strict()}).strict()});

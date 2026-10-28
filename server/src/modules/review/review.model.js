@@ -1,0 +1,4 @@
+import mongoose from 'mongoose';
+const schema=new mongoose.Schema({userId:{type:mongoose.Schema.Types.ObjectId,ref:'User',required:true},type:{type:String,enum:['daily','weekly','monthly'],default:'daily'},dateKey:{type:String,required:true},weekKey:String,answers:{career:String,health:String,selfRespect:String,relationships:String,discipline:String,tomorrow:String},didWell:String,learned:String,respectedSelf:String,challenge:String,improveTomorrow:String,valuesMoment:String,mood:{type:Number,min:1,max:5},energy:{type:Number,min:1,max:5},weekly:{worked:String,didntWork:String,lesson:String,adjustment:String},monthly:{cycleNumber:Number,learned:String,easier:String,struggling:String,continue:String,nextFocus:String}},{timestamps:true});
+schema.index({userId:1,type:1,dateKey:1},{unique:true});
+export const Review=mongoose.model('Review',schema);

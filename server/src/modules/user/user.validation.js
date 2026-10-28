@@ -1,0 +1,12 @@
+import { z } from 'zod';
+const timezone = z.string().trim().min(1).refine((value) => { try { new Intl.DateTimeFormat('en', { timeZone: value }); return true; } catch { return false; } }, 'Use a valid time zone.');
+const reminderTime = z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/).or(z.literal(''));
+const reminderTimes = z.object({ morning: reminderTime.optional(), evening: reminderTime.optional(), weekly: reminderTime.optional() }).strict();
+const identityKey = z.enum(['career','health','confidence','finance','family','discipline']);
+const onboardingHabit = z.object({ identityKey, title: z.string().trim().min(1).max(120), description: z.string().max(400).optional().default(''), schedule: z.enum(['daily','weekdays']).default('daily') }).strict();
+const onboardingPriority = z.object({ identityKey, text: z.string().trim().min(1).max(240) }).strict();
+export const profileSchema = z.object({ body: z.object({ name: z.string().trim().min(1).max(80).optional(), timezone: timezone.optional() }).strict() });
+export const settingsSchema = z.object({ body: z.object({ theme: z.enum(['light', 'dark', 'system']).optional(), dailyTimeMinutes: z.number().int().min(30).max(240).optional(), timezone: timezone.optional(), reminderTimes: reminderTimes.optional(), analyticsOptIn: z.boolean().optional(), streakRule: z.object({ minPriorities: z.number().int().min(1).max(3) }).strict().optional() }).strict() });
+export const deleteAccountSchema = z.object({ body: z.object({ password: z.string().min(1).max(128) }).strict() });
+export const themeSchema = z.object({ body: z.object({ theme: z.enum(['light', 'dark', 'system']) }).strict() });
+export const onboardingSchema = z.object({ body: z.object({ name: z.string().trim().min(1).max(80).optional(), dailyTimeMinutes: z.number().int().min(30).max(240), activeIdentityIds: z.array(identityKey).min(1).max(6).refine((items) => new Set(items).size === items.length, 'Identity areas must be unique.').default(['career','health','confidence']), timezone: timezone.optional(), reminderTimes: reminderTimes.optional(), starterHabits: z.array(onboardingHabit).max(3).refine((items) => new Set(items.map((item) => item.identityKey)).size === items.length, 'Starter habits must use different areas.').default([]), priorities: z.array(onboardingPriority).min(1).max(3).refine((items) => new Set(items.map((item) => item.identityKey)).size === items.length, 'Priorities must use different areas.') }).strict() });

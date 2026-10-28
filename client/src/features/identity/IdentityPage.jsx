@@ -1,0 +1,17 @@
+import { useState } from 'react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { api } from '../../lib/axios.js';
+import { queryKeys } from '../../lib/queryKeys.js';
+import { Compass, Heart, Sparkles, Wallet, Users, Leaf, ArrowRight, X } from 'lucide-react';
+import { usePracticeData } from '../practice/hooks.js';
+import { Card } from '../../components/ui/Card.jsx';
+const icons = { Compass, Heart, Sparkles, Wallet, Users, Leaf };
+export default function IdentityPage() {
+  const { identities } = usePracticeData(); const [active, setActive] = useState(null); const [statement, setStatement] = useState('');
+  const client = useQueryClient();
+  const saveStatement = useMutation({ mutationFn: async ({ key, value }) => (await api.put(`/identity/v1/${key}/statement`, { statement: value })).data.data.identity, onSuccess: (identity) => { setActive(identity); setStatement(identity.statement); client.invalidateQueries({ queryKey: queryKeys.identities }); } });
+  return <main className="library-page"><span className="section-kicker">A LIFE, IN SIX PARTS</span><h1>Your identity library</h1><p className="library-intro">Choose the qualities you want to practise. You can grow in more than one direction, at your own pace.</p>
+    <div className="library-grid">{(identities.data || []).map((identity, index) => { const Icon = icons[identity.icon] || Sparkles; return <button className={`identity-library-card identity-${identity.color}`} key={identity.key} onClick={() => { setActive(identity); setStatement(identity.statement); }}><span className="library-card-top"><span>0{index + 1}</span><i><Icon size={21} /></i></span><strong>{identity.name}</strong><span className="identity-statement">{identity.statement}</span><span className="library-card-bottom">Explore this identity <ArrowRight size={15} /></span></button>; })}</div>
+    {active && <div className="modal-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setActive(null); }}><section className={`identity-detail identity-${active.color}`} role="dialog" aria-modal="true" aria-labelledby="identity-title"><button className="modal-close" onClick={() => setActive(null)} aria-label="Close"><X size={19} /></button><span className="section-kicker">YOUR IDENTITY</span><h2 id="identity-title">{active.name}</h2><p className="identity-statement">{active.statement}</p><label className="statement-editor">Your personal statement<input maxLength={240} value={statement} onChange={(event) => setStatement(event.target.value)} /></label><button className="statement-save" disabled={saveStatement.isPending || !statement.trim()} onClick={() => saveStatement.mutate({ key: active.key, value: statement.trim() })}>{saveStatement.isPending ? 'Saving…' : 'Save statement'}</button>{saveStatement.isError && <p className="form-error" role="alert">We couldn’t save that statement.</p>}{saveStatement.isSuccess && <p role="status" className="text-xs font-semibold text-[var(--green)]">Saved. Your daily reminder has been updated.</p>}<Card className="identity-habit"><span className="section-kicker">A DAILY WAY TO PRACTISE</span><p>{active.habit}</p></Card><h3>Qualities to develop</h3><div className="identity-qualities">{active.qualities?.map((quality) => <span key={quality}>{quality}</span>)}</div>{active.guides?.length > 0 && <><h3>A simple practice guide</h3><ol className="identity-guides">{active.guides.map((step) => <li key={step}>{step}</li>)}</ol></>}</section></div>}
+  </main>;
+}

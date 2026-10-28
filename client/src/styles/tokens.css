@@ -1,0 +1,68 @@
+:root {
+  font-family: 'DM Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  color-scheme: light;
+
+  --bg: #f7f5f0;
+  --page: var(--bg);
+  --surface: #fffefa;
+  --surface-soft: #f1efe8;
+  --surface-raised: var(--surface);
+  --text: #242b28;
+  --ink: var(--text);
+  --muted: #626e65;
+  --ink-soft: color-mix(in srgb, var(--text) 78%, var(--bg));
+  --line: #e3e7df;
+  --line-strong: color-mix(in srgb, var(--line) 68%, var(--text));
+
+  --green: #345d4b;
+  --green-deep: #274838;
+  --green-soft: #e8efe9;
+  --primary: var(--green);
+  --primary-deep: var(--green-deep);
+  --primary-pale: var(--green-soft);
+  --coral: #d18b67;
+  --lavender: #9175a8;
+  --gold: #b39348;
+  --pink: #ce7c86;
+  --blue: #6483a9;
+  --career: #57856e;
+  --health: #d18b67;
+  --confidence: #9175a8;
+  --finance: #b39348;
+  --family: #ce7c86;
+  --discipline: #6483a9;
+
+  --shadow: 0 .75rem 2.2rem #263b2c0b;
+  --shadow-card: var(--shadow);
+  --shadow-float: 0 2rem 5.6rem #263b2c2e;
+  --focus: #50785e;
+  --ease-out: cubic-bezier(.2, .75, .25, 1);
+  --ease-spring: cubic-bezier(.2, .8, .2, 1.2);
+  --radius-sm: .75rem;
+  --radius-md: 1.125rem;
+  --radius-lg: 1.5625rem;
+  --radius-xl: 2rem;
+  --space: .25rem;
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #171d1a;
+  --surface: #202824;
+  --surface-soft: #29322d;
+  --text: #edf0eb;
+  --muted: #a4aea6;
+  --line: #354139;
+  --green: #a5c6ae;
+  --green-deep: #c5ddca;
+  --green-soft: #293b31;
+  --coral: #e2a17f;
+  --lavender: #bda8cf;
+  --gold: #d4b76f;
+  --pink: #e49aa1;
+  --blue: #9db8d7;
+  --shadow: 0 .75rem 2.2rem #0003;
+  --shadow-float: 0 2rem 5.6rem #0007;
+  --focus: #a5c6ae;
+}

@@ -1,0 +1,2 @@
+import{Router}from'express';import{protect}from'../../utils/authMiddleware.js';import{validate}from'../../utils/validate.js';import{addSchema,updateSchema,rangeSchema,summarySchema}from'./finance.validation.js';import{add,range,summary,update,remove}from'./finance.controller.js';
+const router=Router();router.use(protect);router.post('/add',validate(addSchema),add);router.get('/range',validate(rangeSchema),range);router.get('/summary',validate(summarySchema),summary);router.put('/:id',validate(updateSchema),update);router.delete('/:id',remove);export default router;

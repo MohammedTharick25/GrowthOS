@@ -1,0 +1,8 @@
+import{financeRepository}from'./finance.repository.js';import{dateKeyAt}from'../../utils/dateHelpers.js';import{AppError}from'../../utils/errorHandler.js';
+export const financeService={
+  add:(user,input)=>financeRepository.create({...input,userId:user.id,dateKey:input.dateKey||dateKeyAt(new Date(),user.timezone)}),
+  range:(user,from,to)=>financeRepository.range(user.id,from,to),
+  async summary(user,from,to){const entries=await financeRepository.range(user.id,from,to);const totals={income:0,essential:0,optional:0,saved:0};const byDay=new Map();const categories=new Map();for(const entry of entries){totals[entry.type]+=entry.amount;const day=byDay.get(entry.dateKey)||{dateKey:entry.dateKey,income:0,spending:0,saved:0};if(entry.type==='income')day.income+=entry.amount;else if(entry.type==='saved')day.saved+=entry.amount;else day.spending+=entry.amount;byDay.set(entry.dateKey,day);if(entry.type==='essential'||entry.type==='optional'){const key=`${entry.type}:${entry.category}`;categories.set(key,(categories.get(key)||0)+entry.amount);}}return{from,to,totals,net:totals.income-totals.essential-totals.optional,entries:entries.length,daily:[...byDay.values()].sort((a,b)=>a.dateKey.localeCompare(b.dateKey)),categories:[...categories].map(([key,amount])=>{const[type,...name]=key.split(':');return{type,category:name.join(':'),amount};}).sort((a,b)=>b.amount-a.amount)};},
+  async update(userId,id,updates){const entry=await financeRepository.update(userId,id,updates);if(!entry)throw new AppError('Finance entry not found.',404);return entry;},
+  async remove(userId,id){const entry=await financeRepository.remove(userId,id);if(!entry)throw new AppError('Finance entry not found.',404);return entry;},
+};

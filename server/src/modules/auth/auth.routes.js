@@ -1,0 +1,17 @@
+import { Router } from 'express';
+import rateLimit from 'express-rate-limit';
+import { validate } from '../../utils/validate.js';
+import { protect } from '../../utils/authMiddleware.js';
+import { signupSchema, loginSchema, emailSchema, tokenSchema, resetPasswordSchema } from './auth.validation.js';
+import { signup, login, resendVerification, verifyEmail, requestPasswordReset, resetPassword, refresh, logout, me } from './auth.controller.js';
+const router = Router();
+const limiter = rateLimit({ windowMs: 15 * 60 * 1000, limit: 30, standardHeaders: true, legacyHeaders: false });
+const accountMailLimiter = rateLimit({ windowMs: 60 * 60 * 1000, limit: 6, standardHeaders: true, legacyHeaders: false });
+router.post('/signup', limiter, validate(signupSchema), signup);
+router.post('/login', limiter, validate(loginSchema), login);
+router.post('/verification/resend', accountMailLimiter, validate(emailSchema), resendVerification);
+router.post('/verification/confirm', accountMailLimiter, validate(tokenSchema), verifyEmail);
+router.post('/password/forgot', accountMailLimiter, validate(emailSchema), requestPasswordReset);
+router.post('/password/reset', accountMailLimiter, validate(resetPasswordSchema), resetPassword);
+router.post('/refresh', refresh); router.post('/logout', logout); router.get('/me', protect, me);
+export default router;

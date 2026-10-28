@@ -1,0 +1,2 @@
+import{Router}from'express';import{protect}from'../../utils/authMiddleware.js';import{validate}from'../../utils/validate.js';import{addSchema,rangeSchema}from'./courageMoment.validation.js';import{add,range}from'./courageMoment.controller.js';
+const router=Router();router.use(protect);router.post('/add',validate(addSchema),add);router.get('/range',validate(rangeSchema),range);export default router;

@@ -1,0 +1,2 @@
+import {Checkin} from './checkin.model.js';
+export const checkinRepository={today:(userId,dateKey)=>Checkin.find({userId,dateKey}).lean(),find:(userId,habitId,dateKey)=>Checkin.findOne({userId,habitId,dateKey}),create:(data)=>Checkin.create(data),remove:(userId,habitId,dateKey)=>Checkin.findOneAndDelete({userId,habitId,dateKey}),range:(userId,from,to)=>Checkin.find({userId,dateKey:{$gte:from,$lte:to}}).sort({dateKey:1}).lean()};

@@ -1,0 +1,2 @@
+import { api } from '../../lib/axios.js';
+export const journeyApi={current:async()=>(await api.get('/journey/v1/current')).data.data.journey,start:async()=>(await api.post('/journey/v1/start')).data.data.journey,advance:async()=>(await api.post('/journey/v1/advance')).data.data.journey,restart:async()=>(await api.post('/journey/v1/restart')).data.data.journey,saveMonth:async(monthly)=>(await api.post('/review/v1/monthly',{monthly})).data.data.review};

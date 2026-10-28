@@ -1,0 +1,2 @@
+import{Router}from'express';import{protect}from'../../utils/authMiddleware.js';import{validate}from'../../utils/validate.js';import{addSchema,rangeSchema}from'./studySession.validation.js';import{add,range,remove}from'./studySession.controller.js';
+const router=Router();router.use(protect);router.post('/add',validate(addSchema),add);router.get('/range',validate(rangeSchema),range);router.delete('/:id',remove);export default router;

@@ -1,0 +1,13 @@
+{
+  "id": "/",
+  "name": "GrowthOS — Become through action",
+  "short_name": "GrowthOS",
+  "description": "A gentler way to grow through the actions you take each day.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f7f5f0",
+  "theme_color": "#345d4b",
+  "orientation": "any",
+  "icons": [{ "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }]
+}

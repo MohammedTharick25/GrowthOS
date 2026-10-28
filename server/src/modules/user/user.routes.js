@@ -1,0 +1,10 @@
+import { Router } from 'express';
+import { protect } from '../../utils/authMiddleware.js';
+import { validate } from '../../utils/validate.js';
+import { profileSchema, settingsSchema, themeSchema, onboardingSchema, deleteAccountSchema } from './user.validation.js';
+import { getProfile, updateProfile, updateSettings, updateTheme, completeOnboarding, exportAccountData, deleteAccount } from './user.controller.js';
+const router = Router(); router.use(protect);
+router.get('/profile', getProfile); router.put('/profile', validate(profileSchema), updateProfile);
+router.put('/settings', validate(settingsSchema), updateSettings); router.put('/theme', validate(themeSchema), updateTheme);
+router.post('/complete-onboarding', validate(onboardingSchema), completeOnboarding); router.get('/data/export', exportAccountData); router.delete('/account', validate(deleteAccountSchema), deleteAccount);
+export default router;
