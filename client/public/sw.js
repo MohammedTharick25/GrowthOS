@@ -24,7 +24,10 @@ self.addEventListener('fetch', (event) => {
   if (['script', 'style', 'font', 'image'].includes(request.destination)) {
     event.respondWith(caches.match(request).then((cached) => {
       const fresh = fetch(request).then((response) => {
-        if (response.ok) caches.open(CACHE_NAME).then((cache) => cache.put(request, response.clone()));
+        if (response.ok) {
+          const copy = response.clone();
+          event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.put(request, copy)));
+        }
         return response;
       });
       return cached || fresh;

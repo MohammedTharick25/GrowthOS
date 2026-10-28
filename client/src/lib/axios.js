@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { store } from '../app/store.js';
-import { clearSession, failSessionRefresh, finishSessionRefresh, showSessionRefresh, startSessionRefresh } from '../store/slices/sessionSlice.js';
+import { clearSession, expireSession, failSessionRefresh, finishSessionRefresh, showSessionRefresh, startSessionRefresh } from '../store/slices/sessionSlice.js';
 
 export const api = axios.create({ baseURL: import.meta.env.VITE_API_URL || '/api', withCredentials: true, headers: { 'Content-Type': 'application/json' } });
 let refreshRequest;
@@ -66,7 +66,11 @@ api.interceptors.response.use((response) => response, async (error) => {
     await refreshRequest;
     return api(original);
   } catch (refreshError) {
-    if (!store.getState().session.user) store.dispatch(clearSession());
+    // A 401 from refresh means the refresh cookie is missing, expired, or revoked.
+    // Keeping the authenticated client state would offer a refresh prompt that
+    // cannot succeed and leave the user on a protected screen.
+    if (refreshError.response?.status === 401) store.dispatch(expireSession());
+    else if (!store.getState().session.user) store.dispatch(clearSession());
     return Promise.reject(refreshError);
   }
 });
