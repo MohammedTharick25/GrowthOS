@@ -45,6 +45,7 @@ async function refreshWithPrompt(hadSession, initialSessionCheck) {
       store.dispatch(finishSessionRefresh());
       return;
     } catch (refreshError) {
+      if (refreshError.response?.status === 401) throw refreshError;
       const message = refreshError.response?.data?.error?.message || 'We couldn’t refresh your session. Check your connection and try again.';
       store.dispatch(failSessionRefresh(message));
     }

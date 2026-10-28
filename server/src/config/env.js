@@ -7,7 +7,10 @@ export const env = {
   JWT_REFRESH_SECRET: process.env.JWT_REFRESH_SECRET || 'development-refresh-secret-change-me',
   ACCESS_TOKEN_MINUTES: Number(process.env.ACCESS_TOKEN_MINUTES || 15),
   REFRESH_TOKEN_DAYS: Number(process.env.REFRESH_TOKEN_DAYS || 30),
-  COOKIE_SECURE: process.env.COOKIE_SECURE === 'true',
+  // Render frontend and API services use separate onrender.com sites, so
+  // production auth cookies must be cross-site and secure.
+  COOKIE_SECURE: process.env.NODE_ENV === 'production' || process.env.COOKIE_SECURE === 'true',
+  COOKIE_SAME_SITE: process.env.NODE_ENV === 'production' ? 'none' : (process.env.COOKIE_SAME_SITE || 'lax'),
   RESEND_API_KEY: process.env.RESEND_API_KEY || '', MAIL_FROM: process.env.MAIL_FROM || '',
 };
 if (env.NODE_ENV === 'production' && (!process.env.JWT_ACCESS_SECRET || !process.env.JWT_REFRESH_SECRET || env.JWT_ACCESS_SECRET.length < 32 || env.JWT_REFRESH_SECRET.length < 32 || env.JWT_ACCESS_SECRET === env.JWT_REFRESH_SECRET)) {
